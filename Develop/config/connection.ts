@@ -1,8 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://127.0.0.1:27017/socialNetworkDB', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+const db = async (): Promise<typeof mongoose.connection> => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/threads'); 
+        console.log('🌍 Connected to MongoDB');
+        return mongoose.connection;
+    } catch (err) {
+        console.error('🚫 Connection to MongoDB error:', err);
+        throw new Error('🚫 Connection to MongoDB failed');
+    }
 
-module.exports = mongoose.connection;
+    export default db;
