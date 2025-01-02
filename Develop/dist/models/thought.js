@@ -1,12 +1,4 @@
-import { Schema, model, type Document } from 'mongoose';
-
-interface IThought extends Document {
-    thoughtText: string;
-    createdAt: Date;
-    username: string;
-    reactions: string[];
-}
-
+import { Schema, model } from 'mongoose';
 const reactionSchema = new Schema({
     thoughtText: {
         type: String,
@@ -33,7 +25,5 @@ const reactionSchema = new Schema({
     },
     id: false,
 });
-
-const Thought = model<IThought>('Thought', reactionSchema);
-
+const Thought = model('Thought', reactionSchema);
 export default Thought;
