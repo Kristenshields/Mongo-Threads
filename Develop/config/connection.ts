@@ -9,5 +9,5 @@ const db = async (): Promise<typeof mongoose.connection> => {
         console.error('🚫 Connection to MongoDB error:', err);
         throw new Error('🚫 Connection to MongoDB failed');
     }
-
+}
     export default db;

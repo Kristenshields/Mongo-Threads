@@ -1,4 +1,11 @@
-const { Schema, model } = require('mongoose');
+import { Schema, Types, model, type Document } from 'mongoose';
+
+interface IUser extends Document {
+    username: string;
+    email: string;
+    thoughts: Types.ObjectId[];
+    friends: Types.ObjectId[];
+}
 
 const userSchema = new Schema({
     username: {
@@ -11,7 +18,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        match: [/.+@.+\..+/, 'Must match a valid email address'],
+        match: [/.+@.+\..+/, 'Please enter a valid e-mail address'],
     },
     thoughts: [
         {
@@ -32,10 +39,6 @@ const userSchema = new Schema({
     id: false,
 });
 
-userSchema.virtual('friendCount').get(function () {
-    return this.friends.length;
-});
+const User = model<IUser>('User', userSchema);
 
-const User = model('User', userSchema);
-
-module.exports = User;
+export default User;
