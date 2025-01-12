@@ -1,44 +1,51 @@
-import { Schema, model, Document } from 'mongoose';
+import mongoose, { Model, Schema, Document } from 'mongoose';
+import reactionSchema, { IReaction } from './reaction';
 
 
 interface IThought extends Document {
-  published: boolean;
+  thoughtText: string;
   createdAt: Date;
-  buildSuccess: boolean;
-  description: string;
-  getResponses: number;
+  username: string;
+  reactions: IReaction[];
+  reactionCount: number;
 }
 
-// Schema to create Post model
+
 const thoughtSchema = new Schema<IThought>(
   {
-    published: {
-      type: Boolean,
-      default: false,
+    thoughtText: {
+      type: String,
+      required: true,
+      minLength: 1,
+      maxLength: 280,
     },
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (timestamp: number) => new Date(timestamp).toLocaleString(),
+      
     },
-    buildSuccess: {
-      type: Boolean,
-      default: true,
-    },
-    description: {
+    username: {
       type: String,
-      minLength: 4,
-      maxLength: 500,
+      required: true,
     },
+    reactions: [reactionSchema],
+  },
+  {
+    toJSON: {
+      virtuals: true,
+      getters: true,
     },
-);
+    id: false,
+  }
+  );
+  
+thoughtSchema.virtual('reactionCount').get(function(this: IThought) {
+  return this.reactions.length;
+});
 
-// Create a virtual property `getTags` that gets the amount of tags associated with an application
-thoughtSchema
-  .virtual('getResponses')
+
  
-
-
-// Initialize our Application model
-const Thought = model('thought', thoughtSchema);
+const Thought: Model<IThought> = mongoose.model<IThought>('Thought', thoughtSchema);
 
 export default Thought;

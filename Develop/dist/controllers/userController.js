@@ -1,69 +1,31 @@
-import { ObjectId } from 'mongodb';
 import { User, Thought } from '../models/index.js';
-export const userCount = async () => {
-    const numberOfUsers = await User.aggregate()
-        .count('userCount');
-    return numberOfUsers;
-};
-export const reaction = async (userId) => User.aggregate([
-    {
-        $match: {
-            _id: new ObjectId(userId)
-        }
-    },
-    {
-        $lookup: {
-            from: 'reactions',
-            localField: '_id',
-            foreignField: 'userId',
-            as: 'reactions'
-        }
-    },
-    {
-        $project: {
-            _id: 0,
-            username: 1,
-            reactionCount: { $size: '$reactions' }
-        }
-    }
-]);
-export const getAllUsers = async (_req, res) => {
+// Get all users
+export const getUsers = async (_req, res) => {
     try {
         const users = await User.find();
-        const userObj = {
-            users,
-            userCount: await userCount(),
-        };
-        res.json(userObj);
+        res.json(users);
     }
     catch (err) {
-        res.status(500).json({
-            message: err.message
-        });
+        res.status(500).json(err);
     }
 };
-export const getUserById = async (req, res) => {
-    const { userId } = req.params;
+// Get a single user
+export const getSingleUser = async (req, res) => {
     try {
-        const user = await User.findById(userId);
-        if (user) {
-            res.json({
-                user,
-                reaction: await reaction(userId)
-            });
+        const user = await User.findOne({ _id: req.params.userId })
+            .select('-__v');
+        if (!user) {
+            return res.status(404).json({ message: 'No user with that ID' });
         }
-        else {
-            res.status(404).json({
-                message: 'User not found'
-            });
-        }
+        res.json(user);
+        return;
     }
     catch (err) {
-        res.status(500).json({
-            message: err.message
-        });
+        res.status(500).json(err);
+        return;
     }
 };
+// create a new user
 export const createUser = async (req, res) => {
     try {
         const user = await User.create(req.body);
@@ -73,53 +35,19 @@ export const createUser = async (req, res) => {
         res.status(500).json(err);
     }
 };
+// Delete a user and associated apps
 export const deleteUser = async (req, res) => {
     try {
         const user = await User.findOneAndDelete({ _id: req.params.userId });
         if (!user) {
-            return res.status(404).json({
-                message: 'No user found with that ID'
-            });
+            return res.status(404).json({ message: 'No user with that ID' });
         }
-        const thought = await Thought.findOneAndUpdate({ users: req.params.userId }, { $pull: { users: req.params.userId } }, { new: true });
-        if (!thought) {
-            return res.status(404).json({
-                message: 'No thought found with that ID'
-            });
-        }
-        return res.json({ message: 'User and associated thoughts deleted' });
+        await Thought.deleteMany({ _id: { $in: user.thoughts } });
+        res.json({ message: 'User and associated thoughts deleted!' });
+        return;
     }
     catch (err) {
-        console.log(err);
-        return res.status(500).json(err);
-    }
-};
-export const addReaction = async (req, res) => {
-    console.log(req.body);
-    try {
-        const user = await User.findOneAndUpdate({ _id: req.params.userId }, { $addToSet: { reactions: req.body } }, { runValidators: true, new: true });
-        if (!user) {
-            return res.status(404).json({
-                message: 'No user found with that ID'
-            });
-        }
-        return res.json(user);
-    }
-    catch (err) {
-        return res.status(500).json(err);
-    }
-};
-export const removeReaction = async (req, res) => {
-    try {
-        const user = await User.findOneAndUpdate({ _id: req.params.userId }, { $pull: { reactions: { reactionId: req.params.reactionId } } }, { runValidators: true, new: true });
-        if (!user) {
-            return res.status(404).json({
-                message: 'No user found with that ID'
-            });
-        }
-        return res.json(user);
-    }
-    catch (err) {
-        return res.status(500).json(err);
+        res.status(500).json(err);
+        return;
     }
 };

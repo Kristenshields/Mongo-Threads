@@ -1,15 +1,14 @@
-const names = [ 
-    'John', 
-    'Jane', 
-    'Joe', 
-    'Jill', 
-    'Jack', 
-    'Jenny', 
-    'Jim', 
-    'Jen', 
-    'Jesse',    
+const names = [
+    'John',
+    'Jane',
+    'Joe',
+    'Jill',
+    'Jack',
+    'Jenny',
+    'Jim',
+    'Jen',
+    'Jesse',
 ];
-
 const thoughtDescriptions = [
     'I love to code',
     'I love to cook',
@@ -54,21 +53,16 @@ const thoughtDescriptions = [
     'I love to watch mystery shows',
     'I love to watch sci-fi shows',
 ];
-
-const getRandomArrItem = (arr: any[]) => arr[Math.floor(Math.random() * arr.length)];
-
-const getRandomName = () => 
-    `${getRandomArrItem(names)} ${getRandomArrItem(names)}`;
-
-const getRandomThoughts = (int: number) => {
-   let results = [];
-   for (let i = 0; i < int; i++) {
-       results.push({
-           thoughtText: getRandomArrItem(thoughtDescriptions),
-           published: Math.random() > 0.5,
-       });
-   }
+const getRandomArrItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const getRandomName = () => `${getRandomArrItem(names)} ${getRandomArrItem(names)}`;
+const getRandomThoughts = (int) => {
+    let results = [];
+    for (let i = 0; i < int; i++) {
+        results.push({
+            thoughtText: getRandomArrItem(thoughtDescriptions),
+            published: Math.random() > 0.5,
+        });
+    }
     return results;
 };
-
 export { getRandomName, getRandomThoughts };
