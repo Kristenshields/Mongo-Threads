@@ -1,27 +1,31 @@
-import { Schema, model } from 'mongoose';
-// Schema to create Post model
+import mongoose, { Schema } from 'mongoose';
+import reactionSchema from './reaction';
 const thoughtSchema = new Schema({
-    published: {
-        type: Boolean,
-        default: false,
+    thoughtText: {
+        type: String,
+        required: true,
+        minLength: 1,
+        maxLength: 280,
     },
     createdAt: {
         type: Date,
         default: Date.now,
+        get: (timestamp) => new Date(timestamp).toLocaleString(),
     },
-    buildSuccess: {
-        type: Boolean,
-        default: true,
-    },
-    description: {
+    username: {
         type: String,
-        minLength: 4,
-        maxLength: 500,
+        required: true,
     },
+    reactions: [reactionSchema],
+}, {
+    toJSON: {
+        virtuals: true,
+        getters: true,
+    },
+    id: false,
 });
-// Create a virtual property `getTags` that gets the amount of tags associated with an application
-thoughtSchema
-    .virtual('getResponses');
-// Initialize our Application model
-const Thought = model('thought', thoughtSchema);
+thoughtSchema.virtual('reactionCount').get(function () {
+    return this.reactions.length;
+});
+const Thought = mongoose.model('Thought', thoughtSchema);
 export default Thought;

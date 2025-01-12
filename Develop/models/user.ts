@@ -1,8 +1,8 @@
-import mongoose, { Schema, model, Document, } from 'mongoose';
+import mongoose, { Schema, Model, Document, } from 'mongoose';
 
 interface IUser extends Document {
   name: string;
-  eamil: string;
+  email: string;
   thoughts: mongoose.Types.ObjectId[];
   friends: mongoose.Types.ObjectId[];
   friendCount: number;
@@ -58,6 +58,6 @@ userSchema.virtual('friendCount').get(function (this: IUser) {
   return this.friends.length;
 });
   
-const User: model<IUser> = mongoose.model<IUser>('User', userSchema);
+const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
 
 export default User;

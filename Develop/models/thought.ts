@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema, Document } from 'mongoose';
-import reactionSchema, { IReaction } from './reaction';
+import reactionSchema, { IReaction } from './reaction.js';
 
 
 interface IThought extends Document {
@@ -22,7 +22,6 @@ const thoughtSchema = new Schema<IThought>(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (timestamp: number) => new Date(timestamp).toLocaleString(),
       
     },
     username: {
