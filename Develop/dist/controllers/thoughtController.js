@@ -10,7 +10,7 @@ export const getThoughts = async (_req, res) => {
 };
 export const getSingleThought = async (req, res) => {
     try {
-        const thought = await Thought.findOne({ _id: req.params.thoughtId });
+        const thought = await Thought.findOne({ _id: req.body.thoughtId });
         if (!thought) {
             return res.status(404).json({ message: 'No thought with that ID' });
         }
@@ -25,7 +25,7 @@ export const getSingleThought = async (req, res) => {
 export const createThought = async (req, res) => {
     try {
         const thought = await Thought.create(req.body);
-        const user = await User.findOneAndUpdate({ _id: req.body.userId }, { $addToSet: { thoughtd: thought._id } }, { new: true });
+        const user = await User.findOneAndUpdate({ _id: req.body.userId }, { $addToSet: { thoughts: thought._id } }, { new: true });
         if (!user) {
             return res.status(404).json({
                 message: 'Thought created, but found no user with that ID',
@@ -57,11 +57,11 @@ export const updateThought = async (req, res) => {
 };
 export const deleteThought = async (req, res) => {
     try {
-        const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
+        const thought = await Thought.findOneAndDelete({ _id: req.body.thoughtId });
         if (!thought) {
             return res.status(404).json({ message: 'No thought with this id!' });
         }
-        const user = await User.findOneAndUpdate({ thoughts: req.params.thoughtId }, { $pull: { thoughts: req.params.thoughtId } }, { new: true });
+        const user = await User.findOneAndUpdate({ thoughts: req.body.thoughtId }, { $pull: { thoughts: req.body.thoughtId } }, { new: true });
         if (!user) {
             return res.status(404).json({
                 message: 'Thought created but no user with this id!',
@@ -77,7 +77,7 @@ export const deleteThought = async (req, res) => {
 };
 export const addTag = async (req, res) => {
     try {
-        const thought = await Thought.findOneAndUpdate({ _id: req.params.thoughtId }, { $addToSet: { tags: req.body } }, { runValidators: true, new: true });
+        const thought = await Thought.findOneAndUpdate({ _id: req.body.thoughtId }, { $addToSet: { tags: req.body } }, { runValidators: true, new: true });
         if (!thought) {
             return res.status(404).json({ message: 'No thought with this id!' });
         }
@@ -92,7 +92,7 @@ export const addTag = async (req, res) => {
 // Remove application tag. This method finds the application based on ID. It then updates the tags array associated with the app in question by removing it's tagId from the tags array.
 export const removeTag = async (req, res) => {
     try {
-        const thought = await Thought.findOneAndUpdate({ _id: req.params.thoughtId }, { $pull: { tags: { tagId: req.params.tagId } } }, { runValidators: true, new: true });
+        const thought = await Thought.findOneAndUpdate({ _id: req.body.thoughtId }, { $pull: { tags: { tagId: req.body.tagId } } }, { runValidators: true, new: true });
         if (!thought) {
             return res.status(404).json({ message: 'No thought with this id!' });
         }

@@ -1,3 +1,5 @@
+
+
 const names = [ 
     'John', 
     'Jane', 
@@ -55,20 +57,77 @@ const thoughtDescriptions = [
     'I love to watch sci-fi shows',
 ];
 
-const getRandomArrItem = (arr: any[]) => arr[Math.floor(Math.random() * arr.length)];
+const thoughtTags = [
+    'coding',
+    'cooking',
+    'reading',
+    'playing',
+    'sleeping',
+    'traveling',
+    'eating',
+    'dancing',
+    'singing',
+    'swimming',
+    'watching movies',
+    'playing games',
+    'hiking',
+    'biking',
+    'running',
+    'walking',
+    'drawing',
+    'painting',
+    'taking photos',
+    'writing',
+    'meditating',
+    'doing yoga',
+    'playing sports',
+    'playing music',
+    'playing instruments',
+    'watching sports',
+    'watching TV',
+    'watching shows',
+    'watching plays',
+    'watching concerts',
+    'watching musicals',
+    'watching operas',
+    'watching ballets',
+    'watching dance shows',
+    'watching magic shows',
+    'watching comedy shows',
+    'watching drama shows',
+    'watching action shows',
+    'watching horror shows',
+    'watching thriller shows',
+    'watching mystery shows',
+    'watching sci-fi shows',
+];
 
-const getRandomName = () => 
-    `${getRandomArrItem(names)} ${getRandomArrItem(names)}`;
-
-const getRandomThoughts = (int: number) => {
-   let results = [];
-   for (let i = 0; i < int; i++) {
-       results.push({
-           thoughtText: getRandomArrItem(thoughtDescriptions),
-           published: Math.random() > 0.5,
-       });
-   }
-    return results;
+const getRandomInt = (max: number) => {
+    return Math.floor(Math.random() * max);
 };
 
-export { getRandomName, getRandomThoughts };
+const getRandomName = () => {
+    return names[getRandomInt(names.length)];
+};
+
+const getRandomThoughts = (numThoughts: number) => {
+    const thoughts = [];
+    for (let i = 0; i < numThoughts; i++) {
+        const thoughtText = thoughtDescriptions[getRandomInt(thoughtDescriptions.length)];
+        const username = getRandomName();
+        thoughts.push({ thoughtText, username });
+    }
+    return thoughts;
+};
+
+const getRandomTags = (numTags: number) => {
+    const tags = [];
+    for (let i = 0; i < numTags; i++) {
+        tags.push(thoughtTags[getRandomInt(thoughtTags.length)]);
+    }
+    return tags;
+}
+
+
+
+export { getRandomTags, getRandomName, getRandomThoughts };

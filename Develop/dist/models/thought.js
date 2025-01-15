@@ -1,6 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
-import reactionSchema from './reaction';
+import reactionSchema from './reaction.js';
 const thoughtSchema = new Schema({
+    _id: {
+        type: String,
+        default: () => new mongoose.Types.ObjectId().toString(),
+    },
     thoughtText: {
         type: String,
         required: true,
@@ -10,7 +14,6 @@ const thoughtSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        get: (timestamp) => new Date(timestamp).toLocaleString(),
     },
     username: {
         type: String,

@@ -15,7 +15,7 @@ import { Thought, User } from '../models/index.js';
   
   export const getSingleThought = async (req: Request, res: Response) => {
     try {
-      const thought = await Thought.findOne({ _id: req.params.thoughtId });
+      const thought = await Thought.findOne({ _id: req.body.thoughtId });
 
       if (!thought) {
         return res.status(404).json({ message: 'No thought with that ID' });
@@ -35,7 +35,7 @@ import { Thought, User } from '../models/index.js';
       const thought = await Thought.create(req.body);
       const user = await User.findOneAndUpdate(
         { _id: req.body.userId },
-        { $addToSet: { thoughtd: thought._id } },
+        { $addToSet: { thoughts: thought._id } },
         { new: true }
       );
 
@@ -79,15 +79,15 @@ import { Thought, User } from '../models/index.js';
   
   export const deleteThought = async (req: Request, res: Response) => {
     try {
-      const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
+      const thought = await Thought.findOneAndDelete({ _id: req.body.thoughtId });
 
       if (!thought) {
         return res.status(404).json({ message: 'No thought with this id!' });
       }
 
       const user = await User.findOneAndUpdate(
-        { thoughts: req.params.thoughtId },
-        { $pull: { thoughts: req.params.thoughtId } },
+        { thoughts: req.body.thoughtId },
+        { $pull: { thoughts: req.body.thoughtId } },
         { new: true }
       );
 
@@ -109,7 +109,7 @@ import { Thought, User } from '../models/index.js';
   export const addTag = async (req: Request, res: Response) => {
     try {
       const thought = await Thought.findOneAndUpdate(
-        { _id: req.params.thoughtId },
+        { _id: req.body.thoughtId },
         { $addToSet: { tags: req.body } },
         { runValidators: true, new: true }
       );
@@ -130,8 +130,8 @@ import { Thought, User } from '../models/index.js';
   export const removeTag = async (req: Request, res: Response) => {
     try {
       const thought = await Thought.findOneAndUpdate(
-        { _id: req.params.thoughtId },
-        { $pull: { tags: { tagId: req.params.tagId } } },
+        { _id: req.body.thoughtId },
+        { $pull: { tags: { tagId: req.body.tagId } } },
         { runValidators: true, new: true }
       );
 

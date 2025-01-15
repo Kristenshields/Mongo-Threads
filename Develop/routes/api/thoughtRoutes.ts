@@ -9,9 +9,12 @@ router.route('/').get(getThoughts).post(createThought);
 
 router
   .route('/:thoughtId')
+  .get(getThoughts)
   .get(getSingleThought)
+  .post(createThought)
   .put(updateThought)
   .delete(deleteThought);
+
 
 
 export default router;

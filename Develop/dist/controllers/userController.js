@@ -12,7 +12,7 @@ export const getUsers = async (_req, res) => {
 // Get a single user
 export const getSingleUser = async (req, res) => {
     try {
-        const user = await User.findOne({ _id: req.params.userId })
+        const user = await User.findOne({ _id: req.body.userId })
             .select('-__v');
         if (!user) {
             return res.status(404).json({ message: 'No user with that ID' });
@@ -38,7 +38,7 @@ export const createUser = async (req, res) => {
 // Delete a user and associated apps
 export const deleteUser = async (req, res) => {
     try {
-        const user = await User.findOneAndDelete({ _id: req.params.userId });
+        const user = await User.findOneAndDelete({ _id: req.body.userId });
         if (!user) {
             return res.status(404).json({ message: 'No user with that ID' });
         }

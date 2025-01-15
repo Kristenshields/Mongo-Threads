@@ -3,16 +3,22 @@ import reactionSchema, { IReaction } from './reaction.js';
 
 
 interface IThought extends Document {
+  _id: string;
   thoughtText: string;
   createdAt: Date;
   username: string;
   reactions: IReaction[];
   reactionCount: number;
+  __v: number;
 }
 
 
 const thoughtSchema = new Schema<IThought>(
   {
+    _id: {
+      type: String,
+      default: () => new mongoose.Types.ObjectId().toString(),
+    },
     thoughtText: {
       type: String,
       required: true,

@@ -1,7 +1,11 @@
 import mongoose, { Schema, } from 'mongoose';
 // Schema to create User model
 const userSchema = new Schema({
-    name: {
+    _id: {
+        type: String,
+        default: () => new mongoose.Types.ObjectId().toString(),
+    },
+    username: {
         type: String,
         required: true,
         unique: true,

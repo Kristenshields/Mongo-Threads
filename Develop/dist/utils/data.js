@@ -53,16 +53,70 @@ const thoughtDescriptions = [
     'I love to watch mystery shows',
     'I love to watch sci-fi shows',
 ];
-const getRandomArrItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-const getRandomName = () => `${getRandomArrItem(names)} ${getRandomArrItem(names)}`;
-const getRandomThoughts = (int) => {
-    let results = [];
-    for (let i = 0; i < int; i++) {
-        results.push({
-            thoughtText: getRandomArrItem(thoughtDescriptions),
-            published: Math.random() > 0.5,
-        });
-    }
-    return results;
+const thoughtTags = [
+    'coding',
+    'cooking',
+    'reading',
+    'playing',
+    'sleeping',
+    'traveling',
+    'eating',
+    'dancing',
+    'singing',
+    'swimming',
+    'watching movies',
+    'playing games',
+    'hiking',
+    'biking',
+    'running',
+    'walking',
+    'drawing',
+    'painting',
+    'taking photos',
+    'writing',
+    'meditating',
+    'doing yoga',
+    'playing sports',
+    'playing music',
+    'playing instruments',
+    'watching sports',
+    'watching TV',
+    'watching shows',
+    'watching plays',
+    'watching concerts',
+    'watching musicals',
+    'watching operas',
+    'watching ballets',
+    'watching dance shows',
+    'watching magic shows',
+    'watching comedy shows',
+    'watching drama shows',
+    'watching action shows',
+    'watching horror shows',
+    'watching thriller shows',
+    'watching mystery shows',
+    'watching sci-fi shows',
+];
+const getRandomInt = (max) => {
+    return Math.floor(Math.random() * max);
 };
-export { getRandomName, getRandomThoughts };
+const getRandomName = () => {
+    return names[getRandomInt(names.length)];
+};
+const getRandomThoughts = (numThoughts) => {
+    const thoughts = [];
+    for (let i = 0; i < numThoughts; i++) {
+        const thoughtText = thoughtDescriptions[getRandomInt(thoughtDescriptions.length)];
+        const username = getRandomName();
+        thoughts.push({ thoughtText, username });
+    }
+    return thoughts;
+};
+const getRandomTags = (numTags) => {
+    const tags = [];
+    for (let i = 0; i < numTags; i++) {
+        tags.push(thoughtTags[getRandomInt(thoughtTags.length)]);
+    }
+    return tags;
+};
+export { getRandomTags, getRandomName, getRandomThoughts };

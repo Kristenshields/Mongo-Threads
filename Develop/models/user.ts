@@ -1,17 +1,22 @@
 import mongoose, { Schema, Model, Document, } from 'mongoose';
 
 interface IUser extends Document {
-  name: string;
+  username: string;
   email: string;
   thoughts: mongoose.Types.ObjectId[];
   friends: mongoose.Types.ObjectId[];
   friendCount: number;
+  _id: string;
 }
 
 // Schema to create User model
 const userSchema = new Schema<IUser>(
   {
-    name: {
+    _id: {
+      type: String,
+      default: () => new mongoose.Types.ObjectId().toString(),
+    },
+    username: {
       type: String,
       required: true,
       unique: true,
