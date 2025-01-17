@@ -1,31 +1,13 @@
-import { User, Thought } from '../models/index.js';
-// Get all users
-export const getUsers = async (_req, res) => {
+import { User } from '../models/index.js';
+export const getUsers = async (_, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().populate("friends").populate("thoughts");
         res.json(users);
     }
     catch (err) {
         res.status(500).json(err);
     }
 };
-// Get a single user
-export const getSingleUser = async (req, res) => {
-    try {
-        const user = await User.findOne({ _id: req.body.userId })
-            .select('-__v');
-        if (!user) {
-            return res.status(404).json({ message: 'No user with that ID' });
-        }
-        res.json(user);
-        return;
-    }
-    catch (err) {
-        res.status(500).json(err);
-        return;
-    }
-};
-// create a new user
 export const createUser = async (req, res) => {
     try {
         const user = await User.create(req.body);
@@ -35,19 +17,39 @@ export const createUser = async (req, res) => {
         res.status(500).json(err);
     }
 };
-// Delete a user and associated apps
-export const deleteUser = async (req, res) => {
+export const updateUser = async (req, res) => {
     try {
-        const user = await User.findOneAndDelete({ _id: req.body.userId });
-        if (!user) {
-            return res.status(404).json({ message: 'No user with that ID' });
-        }
-        await Thought.deleteMany({ _id: { $in: user.thoughts } });
-        res.json({ message: 'User and associated thoughts deleted!' });
-        return;
+        const user = await User.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true });
+        res.json(user);
     }
     catch (err) {
         res.status(500).json(err);
-        return;
+    }
+};
+export const deleteUser = async (req, res) => {
+    try {
+        const user = await User.findOneAndDelete({ _id: req.params.id });
+        res.json(user);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
+};
+export const addFriend = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate({ _id: req.params.id }, { $addToSet: { friends: req.params.friendId } }, { new: true });
+        res.json(user);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
+};
+export const removeFriend = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate({ _id: req.params.id }, { $pull: { friends: req.params.friendId } }, { new: true });
+        res.json(user);
+    }
+    catch (err) {
+        res.status(500).json(err);
     }
 };

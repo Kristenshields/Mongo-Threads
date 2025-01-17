@@ -1,8 +1,11 @@
-import { Router } from 'express';
 const router = Router();
-import { getUsers, getSingleUser, createUser } from '../../controllers/userController.js';
-// /api/users
-router.route('/').get(getUsers).post(createUser);
-// /api/users/:userId
-router.route('/:userId').get(getSingleUser);
+import { Router } from "express";
+import { getUsers, createUser, updateUser, deleteUser, addFriend, removeFriend } from "../../controllers/userController.js";
+export const userRoutes = Router();
+userRoutes.get("/", getUsers);
+userRoutes.post("/", createUser);
+userRoutes.put("/:id", updateUser);
+userRoutes.delete("/:id", deleteUser);
+userRoutes.post("/:id/friends/:friendId", addFriend);
+userRoutes.delete("/:id/friends/:friendId", removeFriend);
 export default router;
